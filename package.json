@@ -3,8 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "test": "cucumber-js",
-    "test:headed": "PW_HEADLESS=false cucumber-js",
+    "test": "BROWSER=chromium cucumber-js",
+    "test:headed": "BROWSER=chromium cucumber-js",
+    "test:headless": "BROWSER=chromium PW_HEADLESS=true cucumber-js",
+    "test:debug": "BROWSER=chromium PW_SLOWMO=700 cucumber-js",
+    "test:chromium": "BROWSER=chromium cucumber-js",
+    "test:firefox": "BROWSER=firefox cucumber-js",
+    "test:webkit": "BROWSER=webkit cucumber-js",
+    "test:all": "BROWSER=chromium cucumber-js && BROWSER=firefox cucumber-js && BROWSER=webkit cucumber-js",
     "report": "playwright show-report test-outputs/playwright-report"
   },
   "devDependencies": {

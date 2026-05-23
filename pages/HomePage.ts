@@ -4,7 +4,7 @@ export class HomePage {
   constructor(private readonly page: Page) {}
 
   async goto(): Promise<void> {
-    const baseUrl = process.env.BASE_URL ?? 'https://playwright.dev';
+    const baseUrl = process.env.BASE_URL ?? 'https://parabank.parasoft.com/parabank/index.htm?ConnType=JDBC';
     await this.page.goto(baseUrl);
   }
 
