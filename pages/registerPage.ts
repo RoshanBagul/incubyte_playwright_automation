@@ -1,4 +1,5 @@
 import { Page, expect } from '@playwright/test';
+import { randomUUID } from "crypto";
 
 export class RegisterPage {
 
@@ -10,7 +11,7 @@ export class RegisterPage {
 
   async fillRegistrationForm(data: Record<string, string>): Promise<void> {
 
-    const uniqueUserName = `${data['Username']}_${Date.now()}`;
+    const uniqueUserName = `pw_${randomUUID().slice(0, 8)}`;
     const uniqueFirstName = `${data['First Name']}_${Date.now()}`;
 
     await this.page.fill('#customerForm input[name="customer.firstName"]', uniqueFirstName);
@@ -21,7 +22,14 @@ export class RegisterPage {
     await this.page.fill('#customerForm input[name="customer.address.zipCode"]', data['Zip Code']);
     await this.page.fill('#customerForm input[name="customer.phoneNumber"]', data['Phone']);
     await this.page.fill('#customerForm input[name="customer.ssn"]', data['SSN']);
-    await this.page.fill('#customerForm input[name="customer.username"]', uniqueUserName);
+
+    const usernameField = this.page.locator('#customerForm input[name="customer.username"]');
+    await usernameField.click();
+    await usernameField.clear();
+    await usernameField.pressSequentially(uniqueUserName, { delay: 100 });
+
+    await this.page.waitForTimeout(500);
+
     await this.page.fill('#customerForm input[name="customer.password"]', data['Password']);
     await this.page.fill('#customerForm input[name="repeatedPassword"]', data['Confirm']);
 
@@ -31,7 +39,10 @@ export class RegisterPage {
   }
 
   async submitRegistration(): Promise<void> {
-    await this.page.getByRole('button', { name: 'Register' }).click();
+    await Promise.all([
+      this.page.waitForLoadState('networkidle'),
+      this.page.locator('input[value="Register"]').click()
+    ]);
   }
 
   async login(): Promise<void> {

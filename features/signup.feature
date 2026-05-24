@@ -1,3 +1,4 @@
+@signup
 Feature: User Registration
 
   Background: Create a new ParaBank account
@@ -11,4 +12,9 @@ Feature: User Registration
     Then Validate that user should be logged in with mesage "Your account was created successfully. You are now logged in."
     When I click on "Log Out" link
 
-
+  Scenario: Validate User Login and fetch & Print Total Amount
+    Given I am on the Customer Login page
+    When I login with registered credentials
+    Then Validate that user should be logged-In
+    And Validate that "Accounts Overview" page should be visible
+    And I fetch the Total Amount displayed on the page and print it in console

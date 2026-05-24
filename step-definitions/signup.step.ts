@@ -46,3 +46,29 @@ Then('Validate that user should be logged in with mesage {string}', async functi
 Then('Validate that {string} page should be visible', async function (pageTitle) {
      await expect(this.page.locator('h1').first()).toContainText(pageTitle);
 });
+
+When('I login with registered credentials', async function () {
+     const registerPage = new RegisterPage(this.page);
+     await registerPage.login();
+});
+
+Then('Validate that user should be logged-In', async function () {
+     const registerPage = new RegisterPage(this.page);
+     await this.page.waitForTimeout(3000);
+     await expect(this.page.locator('#leftPanel')).toContainText(`Welcome ${registerPage.registeredUsername}`);
+});
+
+Then('I fetch the Total Amount displayed on the page and print it in console', async function () {
+     await this.page.waitForTimeout(3000);
+     const BalanceAmount = await this.page.locator('#accountTable tbody tr:nth-child(1) td:nth-child(2)').textContent();
+     const AvailableAmount = await this.page.locator('#accountTable tbody tr:nth-child(1) td:nth-child(3)').textContent();
+     const totalAmount = await this.page.locator('#accountTable tbody tr:nth-child(2) td:nth-child(2)').textContent();
+     
+     console.log('Balance Amount:', BalanceAmount?.trim());
+     console.log('Available Amount:', AvailableAmount?.trim());
+     console.log('Total Amount:', totalAmount?.trim());
+});
+
+When('I click on {string} link', async function (logout_link) {
+     await this.page.locator('#leftPanel').getByRole('link', { name: logout_link }).click();
+});
