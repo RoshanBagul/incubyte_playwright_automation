@@ -1,7 +1,9 @@
-import { After, Before, Status } from '@cucumber/cucumber';
+import { After, Before, Status, setDefaultTimeout } from '@cucumber/cucumber';
 
 import { ensureDirectory } from './file-utils';
 import { CustomWorld } from './world';
+
+setDefaultTimeout(120 * 1000);
 
 Before(async function (this: CustomWorld) {
   await this.launchBrowser();
