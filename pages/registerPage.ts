@@ -9,7 +9,7 @@ export class RegisterPage {
     this.page = page;
   }
 
-  async fillRegistrationForm(data: Record<string, string>): Promise<void> {
+  async fillRegistrationForm(data: Record<string, string>): Promise<{username: string, password: string}> {
 
     const uniqueUserName = `pw_${randomUUID().slice(0, 8)}`;
     const uniqueFirstName = `${data['First Name']}_${Date.now()}`;
@@ -33,8 +33,7 @@ export class RegisterPage {
     await this.page.fill('#customerForm input[name="customer.password"]', data['Password']);
     await this.page.fill('#customerForm input[name="repeatedPassword"]', data['Confirm']);
 
-    this.registeredUsername = uniqueUserName;
-    this.registeredPassword = data['Password'];
+    return { username: uniqueUserName, password: data['Password'] };
     
   }
 
@@ -45,9 +44,17 @@ export class RegisterPage {
     ]);
   }
 
-  async login(): Promise<void> {
-    await this.page.fill('input[name=username]', this.registeredUsername);
-    await this.page.fill('input[name=password]', this.registeredPassword);
+  async login( username: string, password: string): Promise<void> {
+    const usernameField = this.page.locator('input[name=username]');
+    await usernameField.click();
+    await usernameField.clear();
+    await usernameField.pressSequentially(username, { delay: 100 });
+    // await this.page.fill('input[name=username]', username);
+    const passwordField = this.page.locator('input[name=password]');
+    await passwordField.click();
+    await passwordField.clear();
+    await passwordField.pressSequentially(password, { delay: 100 });
+    // await this.page.fill('input[name=password]', password);
     await this.page.getByRole('button', { name: 'Log In' }).click();
   }
 }
