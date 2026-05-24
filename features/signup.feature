@@ -16,6 +16,5 @@ Feature: User Registration
     Given I am on the Customer Login page
     When I login with registered credentials
     Then Validate that user should be logged-In
-    When I click on "Accounts" link
     And Validate that "Accounts Overview" page should be visible
     And I fetch the Total Amount displayed on the page and print it in console
