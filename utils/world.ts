@@ -35,18 +35,13 @@ export class CustomWorld extends World {
 
  async launchBrowser(): Promise<void> {
 
-  const isHeadless =
-    process.env.PW_HEADLESS === 'true';
+  const isHeadless = process.env.PW_HEADLESS === 'true';
 
-  const slowMo = Number(
-    process.env.PW_SLOWMO ?? '0'
-  );
+  const slowMo = Number( process.env.PW_SLOWMO ?? '0');
 
-  const browserType =
-    this.getBrowserType();
+  const browserType = this.getBrowserType();
 
-  this.browser =
-    await browserType.launch({
+  this.browser = await browserType.launch({
       headless: false,
 
       slowMo: Number.isNaN(slowMo)
@@ -67,16 +62,14 @@ export class CustomWorld extends World {
       ]
     });
 
-  this.context =
-    await this.browser.newContext({
+  this.context = await this.browser.newContext({
       viewport: {
         width: 1920,
         height: 1080
       }
-    });
+});
 
-  this.page =
-    await this.context.newPage();
+  this.page = await this.context.newPage();
 }
 
   async closeBrowser(): Promise<void> {
