@@ -41,26 +41,26 @@ export class CustomWorld extends World {
 
   const browserType = this.getBrowserType();
 
-  this.browser = await browserType.launch({
+  const launchOptions: any = {
       headless: isHeadless,
 
       slowMo: Number.isNaN(slowMo)
         ? 0
         : slowMo,
 
-      channel: 'chrome', // IMPORTANT
-
       args: [
-        '--disable-gpu',
-        '--use-gl=swiftshader',
-        '--disable-software-rasterizer',
-        '--disable-dev-shm-usage',
-        '--no-sandbox',
-        '--window-size=1920,1080',
-        '--disable-features=VizDisplayCompositor',
-        '--ozone-platform=x11'
+         '--disable-dev-shm-usage',
+         '--no-sandbox',
+         '--window-size=1920,1080',
       ]
-    });
+    };
+
+  // Only Chromium supports chrome channel
+  if (this.browserName === 'chromium') {
+    launchOptions.channel = 'chrome';
+  }
+
+  this.browser = await browserType.launch(launchOptions);
 
   this.context = await this.browser.newContext({
       viewport: {
