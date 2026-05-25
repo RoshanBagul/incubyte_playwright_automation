@@ -37,37 +37,49 @@ export class CustomWorld extends World {
 
   const isHeadless = process.env.PW_HEADLESS === 'true';
 
-  const slowMo = Number( process.env.PW_SLOWMO ?? '0');
+  const slowMo = Number(process.env.PW_SLOWMO ?? '0');
 
   const browserType = this.getBrowserType();
 
   const launchOptions: any = {
-      headless: isHeadless,
+    headless: isHeadless,
 
-      slowMo: Number.isNaN(slowMo)
-        ? 0
-        : slowMo,
+    slowMo: Number.isNaN(slowMo)
+      ? 0
+      : slowMo,
+  };
 
-      args: [
-         '--disable-dev-shm-usage',
-         '--no-sandbox',
-         '--window-size=1920,1080',
-      ]
-    };
-
-  // Only Chromium supports chrome channel
+  // Chromium-specific config
   if (this.browserName === 'chromium') {
+
     launchOptions.channel = 'chrome';
+
+    launchOptions.args = [
+      '--disable-dev-shm-usage',
+      '--no-sandbox',
+      '--window-size=1920,1080',
+    ];
   }
+
+  // Firefox-specific config
+  if (this.browserName === 'firefox') {
+
+    launchOptions.args = [
+      '--width=1920',
+      '--height=1080',
+    ];
+  }
+
+  // WebKit should NOT receive chromium args
 
   this.browser = await browserType.launch(launchOptions);
 
   this.context = await this.browser.newContext({
-      viewport: {
-        width: 1920,
-        height: 1080
-      }
-});
+    viewport: {
+      width: 1920,
+      height: 1080,
+    },
+  });
 
   this.page = await this.context.newPage();
 }
