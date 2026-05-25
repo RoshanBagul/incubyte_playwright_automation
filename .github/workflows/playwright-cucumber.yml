@@ -38,7 +38,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Tests on ${{ matrix.browser }}
-        run: BROWSER=${{ matrix.browser }} cucumber-js
+        run: BROWSER=${{ matrix.browser }} npx cucumber-js
 
       - name: Upload Playwright Report
         if: always()
