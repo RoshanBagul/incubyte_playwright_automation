@@ -37,37 +37,49 @@ export class CustomWorld extends World {
 
   const isHeadless = process.env.PW_HEADLESS === 'true';
 
-  const slowMo = Number( process.env.PW_SLOWMO ?? '0');
+  const slowMo = Number(process.env.PW_SLOWMO ?? '0');
 
   const browserType = this.getBrowserType();
 
-  this.browser = await browserType.launch({
-      headless: false,
+  const launchOptions: any = {
+    headless: isHeadless,
 
-      slowMo: Number.isNaN(slowMo)
-        ? 0
-        : slowMo,
+    slowMo: Number.isNaN(slowMo)
+      ? 0
+      : slowMo,
+  };
 
-      channel: 'chrome', // IMPORTANT
+  // Chromium-specific config
+  if (this.browserName === 'chromium') {
 
-      args: [
-        '--disable-gpu',
-        '--use-gl=swiftshader',
-        '--disable-software-rasterizer',
-        '--disable-dev-shm-usage',
-        '--no-sandbox',
-        '--window-size=1920,1080',
-        '--disable-features=VizDisplayCompositor',
-        '--ozone-platform=x11'
-      ]
-    });
+    launchOptions.channel = 'chrome';
+
+    launchOptions.args = [
+      '--disable-dev-shm-usage',
+      '--no-sandbox',
+      '--window-size=1920,1080',
+    ];
+  }
+
+  // Firefox-specific config
+  if (this.browserName === 'firefox') {
+
+    launchOptions.args = [
+      '--width=1920',
+      '--height=1080',
+    ];
+  }
+
+  // WebKit should NOT receive chromium args
+
+  this.browser = await browserType.launch(launchOptions);
 
   this.context = await this.browser.newContext({
-      viewport: {
-        width: 1920,
-        height: 1080
-      }
-});
+    viewport: {
+      width: 1920,
+      height: 1080,
+    },
+  });
 
   this.page = await this.context.newPage();
 }

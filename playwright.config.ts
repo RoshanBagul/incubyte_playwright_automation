@@ -16,7 +16,8 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    headless: false,
+    // Headless only in CI
+    headless: !!process.env.CI,
   },
 
   projects: [
@@ -26,11 +27,18 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
 
-        viewport: null,
-
-        launchOptions: {
-          args: ['--start-maximized'],
+        // Better for CI
+        viewport: {
+          width: 1920,
+          height: 1080,
         },
+
+        // Only maximize locally
+        launchOptions: process.env.CI
+          ? {}
+          : {
+              args: ['--start-maximized'],
+            },
       },
     },
   ],
