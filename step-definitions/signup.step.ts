@@ -70,6 +70,7 @@ Then('I fetch the Total Amount displayed on the page and print it in console', a
      const AvailableAmount = await this.page.locator('#accountTable tbody tr:nth-child(1) td:nth-child(3)').textContent();
      const totalAmount = await this.page.locator('#accountTable tbody tr:nth-child(2) td:nth-child(2)').textContent();
      
+     console.log ('Ferching Amount details from the page');
      console.log('Balance Amount:', BalanceAmount?.trim());
      console.log('Available Amount:', AvailableAmount?.trim());
      console.log('Total Amount:', totalAmount?.trim());
