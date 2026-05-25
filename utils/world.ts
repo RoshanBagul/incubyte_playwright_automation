@@ -42,7 +42,7 @@ export class CustomWorld extends World {
   const browserType = this.getBrowserType();
 
   this.browser = await browserType.launch({
-      headless: false,
+      headless: isHeadless,
 
       slowMo: Number.isNaN(slowMo)
         ? 0
